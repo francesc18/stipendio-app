@@ -1,6 +1,6 @@
 // Service worker: tiene in cache i file dell'app per usarla anche offline.
 // I dati (mesi e PDF) NON passano di qui: stanno in IndexedDB sul telefono.
-const CACHE = "stipendi-v3";
+const CACHE = "stipendi-v4";
 const FILES = [
   "./",
   "index.html",
@@ -16,7 +16,7 @@ const FILES = [
 ];
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(f => new Request(f, { cache: "reload" })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", e => {
@@ -32,7 +32,7 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET" || new URL(req.url).origin !== location.origin) return;
   e.respondWith(
-    fetch(req)
+    fetch(req, { cache: "no-cache" })
       .then(res => {
         if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
         return res;

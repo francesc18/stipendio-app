@@ -515,5 +515,15 @@ render();
     if (!ys.length) msg("Benvenuto. Tocca un mese per aggiungerlo, oppure importa il tuo Excel o un backup dal Menu ☰.");
   } catch (err) { loaded = true; render(); msg("Archivio del telefono non disponibile: " + (err.message || err), true); }
 })();
-if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+if ("serviceWorker" in navigator) addEventListener("load", async () => {
+  try {
+    const hadSw = !!navigator.serviceWorker.controller;
+    const reg = await navigator.serviceWorker.register("sw.js", { updateViaCache: "none" });
+    // quando arriva una nuova versione dell'app, ricarica la pagina una volta
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadSw && !reloaded) { reloaded = true; location.reload(); } });
+    // controlla aggiornamenti ogni volta che si torna sull'app
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") reg.update().catch(() => {}); });
+  } catch (_) {}
+});
 })();
