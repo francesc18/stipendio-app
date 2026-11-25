@@ -40,10 +40,9 @@
   <p class="note">Totale = acconto + saldo. Differenza = ricevuto − cedolino: in rosso quanto manca, in verde quanto è arrivato in più. Tocca un mese per modificarlo.</p>
 </main>
 
-<nav class="dock">
-  <label class="btn pri" for="pdf">Carica busta paga<input class="file" id="pdf" type="file" accept="application/pdf,.pdf"></label>
-  <button id="addPay" class="btn" type="button">Registra pagamento</button>
-</nav>
+
+<input class="file" id="pdf" type="file" accept="application/pdf,.pdf" hidden>
+<button id="addPay" type="button" hidden></button>
 
 <!-- Menu -->
 <dialog id="menuDlg" class="sheet">

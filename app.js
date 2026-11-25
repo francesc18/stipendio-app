@@ -78,8 +78,10 @@ const msg = (t, err) => { const e = $("msg"); e.textContent = t || ""; e.classNa
 
 /* ---------- Vista ---------- */
 function years() {
-  const s = new Set(Object.values(docs).map(d => d.anno)); s.add(year); s.add(new Date().getFullYear());
-  return [...s].filter(Boolean).sort((a, b) => a - b);
+  // dal primo anno con dati fino all'anno successivo a quello attuale (o all'ultimo con dati)
+  const ys = Object.values(docs).map(d => d.anno).filter(Boolean), now = new Date().getFullYear();
+  const lo = Math.min(now, year, ...ys), hi = Math.max(now + 1, year, ...ys.map(y => y + 1));
+  const out = []; for (let y = lo; y <= hi; y++) out.push(y); return out;
 }
 function render() {
   $("title").textContent = "Stipendi";
@@ -510,7 +512,7 @@ render();
     await reload();
     const ys = Object.values(docs).map(d => d.anno);
     if (ys.length && !ys.includes(year)) { year = Math.max(...ys); render(); }
-    if (!ys.length) msg("Benvenuto. Per iniziare carica una busta paga, oppure importa il tuo Excel o un backup dal Menu ☰.");
+    if (!ys.length) msg("Benvenuto. Tocca un mese per aggiungerlo, oppure importa il tuo Excel o un backup dal Menu ☰.");
   } catch (err) { loaded = true; render(); msg("Archivio del telefono non disponibile: " + (err.message || err), true); }
 })();
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));

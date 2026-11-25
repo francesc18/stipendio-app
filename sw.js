@@ -1,6 +1,6 @@
 // Service worker: tiene in cache i file dell'app per usarla anche offline.
 // I dati (mesi e PDF) NON passano di qui: stanno in IndexedDB sul telefono.
-const CACHE = "stipendi-v2";
+const CACHE = "stipendi-v3";
 const FILES = [
   "./",
   "index.html",
