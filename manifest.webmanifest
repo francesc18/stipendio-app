@@ -1,0 +1,17 @@
+{
+  "name": "Stipendi e pagamenti",
+  "short_name": "Stipendi",
+  "description": "Tracciamento di acconti, saldi e buste paga. I dati restano sul telefono.",
+  "lang": "it",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e7e4df",
+  "theme_color": "#141210",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
