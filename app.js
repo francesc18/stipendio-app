@@ -248,11 +248,12 @@ async function pdfText(file) {
 }
 const isAmt = i => /^-?[\d.,]+$/.test(i.s) && AMT.test(i.s);
 function nearAmount(items, a) {
-  // importo più vicino sotto l'etichetta (stessa colonna) o alla sua destra (stessa riga)
-  const c = items.filter(i => isAmt(i) && i !== a && (
-    (i.y < a.y && a.y - i.y < 40 && Math.abs(i.x - a.x) < 140) || (Math.abs(i.y - a.y) < 4 && i.x > a.x)));
-  c.sort((p, q) => (Math.abs(a.y - p.y) + Math.abs(p.x - a.x) / 4) - (Math.abs(a.y - q.y) + Math.abs(q.x - a.x) / 4));
-  return c[0] ? toNum(c[0].s.match(AMT)[0]) : null;
+  // 1) importo sulla riga sotto l'etichetta (stessa colonna); 2) altrimenti alla sua destra sulla stessa riga
+  const below = items.filter(i => isAmt(i) && a.y - i.y >= 8 && a.y - i.y < 45 && Math.abs(i.x - a.x) < 120)
+    .sort((p, q) => (a.y - p.y) - (a.y - q.y) || Math.abs(p.x - a.x) - Math.abs(q.x - a.x));
+  const right = items.filter(i => isAmt(i) && Math.abs(i.y - a.y) < 4 && i.x > a.x).sort((p, q) => p.x - q.x);
+  const c = below[0] || right[0];
+  return c ? toNum(c.s.match(AMT)[0]) : null;
 }
 function parse(items, name, nome) {
   const all = items.map(i => i.s).join(" ");
